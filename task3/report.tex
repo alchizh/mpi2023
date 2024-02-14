@@ -1,0 +1,112 @@
+\documentclass[12pt,a4paper,oneside,final]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx} % \includegraphics
+\usepackage{indentfirst}
+
+\oddsidemargin = 0cm
+\topmargin = -1.5cm
+\textwidth = 16cm
+\textheight = 24cm
+\parindent = 0.5cm
+
+\newcommand\Section[1]{
+  \refstepcounter{section}
+  \section*{\raggedright
+    \arabic{section}. #1}
+  \addcontentsline{toc}{section}{%
+    \arabic{section}. #1}
+}
+
+\newcommand\Subsection[1]{
+  \refstepcounter{subsection}
+  \subsection*{\raggedright
+    \arabic{section}.\arabic{subsection}. #1
+  }
+  \addcontentsline{toc}{subsection}{%
+    \arabic{section}.\arabic{subsection}. #1}
+}
+
+\newcommand\Subsubsection[1]{
+  \refstepcounter{subsubsection}
+  \subsubsection*{\raggedright
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1
+  }
+  \addcontentsline{toc}{subsubsection}{%
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+}
+
+\sloppy
+
+\title{Задание 3 \\
+  Подсчёт количества промахов в кэш для операции матричного умножения в зависимости от порядка итерирования \\
+  Отчёт}
+\author{Чижевский\,А.А.}
+\date{2023}
+
+\begin{document}
+
+\maketitle
+
+\Section{Постановка задачи}
+
+
+При помощи PAPI снять значения аппаратных счетчиков промахов L1/L2 кэшей при выполнении операции умножения квадратных матриц. Сравнить полученные значения с теоретическими для каждого порядка итерирования.
+
+\Section{Формат коммандной строки}
+
+\begin{verbatim}
+<binary> <матрица_а> <матрица_b> <матрица_c> <режим>
+\end{verbatim}
+
+\noindent
+Режимы: 0 – ijk, 1 – ikj, 2 – kij, 3 – jik, 4 – jki, 5 – kji.
+
+\Section{Спецификация системы}
+
+\noindent
+Процессор: POWER8NVL 4023MHz 
+
+\noindent
+Размеры кэшей 
+
+\noindent
+L1d cache:             64K
+
+\noindent
+L1i cache:             32K
+
+\noindent
+L2 cache:              512K
+
+\noindent
+Размер строки кэша L1: 128 байт
+
+\Section{Результаты выполнения}
+
+Для исследования размер матрицы был выбран $1000\times1000$.
+
+\renewcommand{\arraystretch}{2}
+\begin{center}
+ \resizebox{16cm}{!} {
+  \begin{tabular}[t]{|l|l|l|l|l|}
+    \hline
+      & L1 cache misses & L2 cache misses & L1 Theor & $\frac{L1Theor}{L1misses}$ \\
+    \hline
+    ijk & $2036251202$ & $31483206$ & $1031250000$ & $0.5064$ \\
+    \hline
+    ikj & $29454181$ & $115388$ & $62500000$ & $2.1219$\\
+    \hline
+    kij & $23760392$ & $1188211$ & $62500000$ & $2.6304$\\
+    \hline
+    jik & $2044664391$ & $31493958$ & $1031250000$ & $0.5044$\\
+    \hline
+    jki & $4295738183$ & $35928740$ & $2000000000$ & $0.4656$\\
+    \hline
+    kji & $4041456024$ & $36615068$ & $2000000000$ & $0.4949$\\
+    \hline
+  \end{tabular}
+  }
+\end{center}
+
+\end{document}

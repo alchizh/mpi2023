@@ -1,0 +1,125 @@
+\documentclass[12pt,a4paper,oneside,final]{article}
+\usepackage{pgfplots}
+% \pgfplotsset{width=7cm, compat=1.18}
+\pgfplotsset{compat=1.9}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx} % \includegraphics
+\usepackage{indentfirst}
+
+\oddsidemargin = 0cm
+\topmargin = -1.5cm
+\textwidth = 16cm
+\textheight = 24cm
+\parindent = 0.5cm
+
+\newcommand\Section[1]{
+  \refstepcounter{section}
+  \section*{\raggedright
+    \arabic{section}. #1}
+  \addcontentsline{toc}{section}{%
+    \arabic{section}. #1}
+}
+
+\newcommand\Subsection[1]{
+  \refstepcounter{subsection}
+  \subsection*{\raggedright
+    \arabic{section}.\arabic{subsection}. #1
+  }
+  \addcontentsline{toc}{subsection}{%
+    \arabic{section}.\arabic{subsection}. #1}
+}
+
+\newcommand\Subsubsection[1]{
+  \refstepcounter{subsubsection}
+  \subsubsection*{\raggedright
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1
+  }
+  \addcontentsline{toc}{subsubsection}{%
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+}
+
+\sloppy
+
+\title{Задание 4 \\
+  Параллельный алгоритм умножения матрицы на вектор\\
+  Отчёт}
+\author{Чижевский\,А.А.}
+\date{2023}
+
+\begin{document}
+
+\maketitle
+
+\Section{Постановка задачи}
+
+
+Разработать параллельную программу с использованием технологии MPI, реализующую алгоритм умножения плотной матрицы на вектор $A \cdot b = c.$ $A \in Z^{m \times n}.$ Провести исследование эффективности разработанной программы на системе Polus.
+
+\Section{Формат коммандной строки}
+
+\begin{verbatim}
+   mpisubmit.pl -p <P> ./prog -- <P_row> <P_col> <матрица_а> <вектор_b> <вектор_c>
+\end{verbatim}
+
+\Section{Спецификация системы}
+
+\noindent
+
+\noindent
+Процессор: POWER8NVL 4023MHz 
+
+\noindent
+Размеры кэшей 
+
+\noindent
+L1d cache:             64K
+
+\noindent
+L1i cache:             32K
+
+\noindent
+L2 cache:              512K
+
+\noindent
+Размер строки кэша L1: 128 байт
+
+\noindent
+Число вычислительных ядер: 8
+
+\Section{Результаты выполнения}
+
+Размер матрицы А: $10000\times12000$
+
+Размер вектора b: $12000\times1$
+
+Ниже приведен график зависимости времени работы основного цикла программы (в секундах) от количества MPI процессов.
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        yticklabel style={
+            /pgf/number format/precision=3,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north west,
+    	xlabel = {Режим},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 16,
+        width = 400,
+        height = 320
+    ]
+    \addplot coordinates {
+	    (1, 1.016766) (2, 0.565827) (4, 0.299348) (8, 0.197953) (16, 0.169555) 
+    };
+    
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+
+\end{document}

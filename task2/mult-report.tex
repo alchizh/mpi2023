@@ -1,0 +1,180 @@
+\documentclass[12pt,a4paper,oneside,final]{article}
+\usepackage{pgfplots}
+% \pgfplotsset{width=7cm, compat=1.18}
+\pgfplotsset{compat=1.9}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx} % \includegraphics
+\usepackage{indentfirst}
+
+\oddsidemargin = 0cm
+\topmargin = -1.5cm
+\textwidth = 16cm
+\textheight = 24cm
+\parindent = 0.5cm
+
+\newcommand\Section[1]{
+  \refstepcounter{section}
+  \section*{\raggedright
+    \arabic{section}. #1}
+  \addcontentsline{toc}{section}{%
+    \arabic{section}. #1}
+}
+
+\newcommand\Subsection[1]{
+  \refstepcounter{subsection}
+  \subsection*{\raggedright
+    \arabic{section}.\arabic{subsection}. #1
+  }
+  \addcontentsline{toc}{subsection}{%
+    \arabic{section}.\arabic{subsection}. #1}
+}
+
+\newcommand\Subsubsection[1]{
+  \refstepcounter{subsubsection}
+  \subsubsection*{\raggedright
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1
+  }
+  \addcontentsline{toc}{subsubsection}{%
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+}
+
+\sloppy
+
+\title{Задание 2 \\
+  Анализ влияния кэша на операцию матричного
+умножения \\
+  Отчёт}
+\author{Чижевский\,А.А.}
+\date{2023}
+
+\begin{document}
+
+\maketitle
+
+\Section{Постановка задачи}
+
+
+Реализовать последовательный алгоритм матричного умножения и оценить влияние кэша на время выполнения программы.
+
+\Section{Формат коммандной строки}
+
+\begin{verbatim}
+<binary> <матрица_а> <матрица_b> <матрица_c> <режим>
+\end{verbatim}
+
+\noindent
+Режимы: 0 – ijk, 1 – ikj, 2 – kij, 3 – jik, 4 – jki, 5 – kji.
+
+\Section{Спецификация системы}
+
+\noindent
+Процессор: Apple M1
+
+\noindent
+Число вычислительных ядер: 8
+
+\Section{Результаты выполнения}
+
+Размеры матриц: $300\times300, 500\times500, 1000\times1000$
+
+Ниже приведены графики зависимости времени работы основного цикла програм-
+мы (в секундах) от режима итерирования.
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        yticklabel style={
+            /pgf/number format/precision=3,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north west,
+        xtick distance = 1,
+    	xlabel = {Режим},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 5,
+        ymin = 0.02,
+        ymax = 0.07,
+        width = 400,
+        height = 320
+    ]
+    \legend{ 
+	$msize\ 300\times300$
+    };
+    \addplot coordinates {
+	    (0,0.033812) (1,0.021545) (2,0.021397) (3,0.038256) (4,0.065307) (5,0.066271)
+    };
+    
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        yticklabel style={
+            /pgf/number format/precision=2,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north west,
+        xtick distance = 1,
+    	xlabel = {Режим},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 5,
+        ymin = 0.05,
+        ymax = 0.95,
+        width = 400,
+        height = 320
+    ]
+    \legend{ 
+	$msize\ 500\times500$
+    };
+    \addplot coordinates {
+	    (0,0.112552) (1,0.067886) (2,0.06811) (3,0.115821) (4,0.882386) (5,0.843262)
+    };
+    
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        yticklabel style={
+            /pgf/number format/precision=1,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north west,
+        xtick distance = 1,
+    	xlabel = {Режим},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 5,
+        ymin = 0,
+        ymax = 5.5,
+        width = 400,
+        height = 320
+    ]
+    \legend{ 
+	$msize\ 1000\times1000$
+    };
+    \addplot coordinates {
+	    (0,0.992807) (1,0.381163) (2,0.408762) (3,0.98364) (4,5.14642) (5,5.15529)
+    };
+    
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\end{document}

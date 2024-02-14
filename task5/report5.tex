@@ -1,0 +1,150 @@
+\documentclass[12pt,a4paper,oneside,final]{article}
+\usepackage{pgfplots}
+% \pgfplotsset{width=7cm, compat=1.18}
+\pgfplotsset{compat=1.9}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx} % \includegraphics
+\usepackage{indentfirst}
+
+\oddsidemargin = 0cm
+\topmargin = -1.5cm
+\textwidth = 16cm
+\textheight = 24cm
+\parindent = 0.5cm
+
+\newcommand\Section[1]{
+  \refstepcounter{section}
+  \section*{\raggedright
+    \arabic{section}. #1}
+  \addcontentsline{toc}{section}{%
+    \arabic{section}. #1}
+}
+
+\newcommand\Subsection[1]{
+  \refstepcounter{subsection}
+  \subsection*{\raggedright
+    \arabic{section}.\arabic{subsection}. #1
+  }
+  \addcontentsline{toc}{subsection}{%
+    \arabic{section}.\arabic{subsection}. #1}
+}
+
+\newcommand\Subsubsection[1]{
+  \refstepcounter{subsubsection}
+  \subsubsection*{\raggedright
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1
+  }
+  \addcontentsline{toc}{subsubsection}{%
+    \arabic{section}.\arabic{subsection}.\arabic{subsubsection}. #1}
+}
+
+\sloppy
+
+\title{Задание 5 \\
+  Параллельный алгоритм DNS матричного умножения\\
+  Отчёт}
+\author{Чижевский\,А.А.}
+\date{2023}
+
+\begin{document}
+
+\maketitle
+
+\Section{Постановка задачи}
+
+Реализовать параллельный 3D алгоритм DNA матричного умножения. Протестировать полученную программу на Polus. Составить графики для матриц размерности $1536\times1536, 3072\times3072$ и для числа процессов $n = \{1, 2^3 = 8, 3^3=27\}$.
+
+\Section{Формат коммандной строки}
+
+\begin{verbatim}
+   mpisubmit.pl -p <Np> ./prog -- <матрица_а> <матрица_b> <матрица_c>
+\end{verbatim}
+
+\Section{Спецификация системы}
+
+\noindent
+
+\noindent
+Процессор: POWER8NVL 4023MHz 
+
+\noindent
+Размеры кэшей 
+
+\noindent
+L1d cache:             64K
+
+\noindent
+L1i cache:             32K
+
+\noindent
+L2 cache:              512K
+
+\noindent
+Размер строки кэша L1: 128 байт
+
+\noindent
+Число вычислительных ядер: 8
+
+\Section{Результаты выполнения}
+
+
+Ниже приведены графики зависимости времени работы основного цикла программы (в секундах) от количества MPI процессов.
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        	xtick = {1, 8, 27},
+        yticklabel style={
+            /pgf/number format/precision=3,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north east,
+    	xlabel = {Количество процессов},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 30,
+        width = 400,
+        height = 320
+    ]
+    \addplot coordinates {
+	    (1, 47.574) (8, 5.29) (27, 2.036876) 
+    };
+    \legend {dim = 1536 $\times$ 1536}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\hspace {2cm}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        scaled ticks = false,
+        	xtick = {1, 8, 27},
+        yticklabel style={
+            /pgf/number format/precision=3,
+            /pgf/number format/fixed,
+            /pgf/number format/fixed zerofill,
+          },
+        legend pos = north east,
+    	xlabel = {Количество процессов},
+    	ylabel = {Время, с},
+    	minor tick num = 0,
+        xmin = 0,
+        xmax = 30,
+        width = 400,
+        height = 320
+    ]
+    \addplot coordinates {
+	    (1,  226.178548) (8, 48.01668) (27, 17.488632) 
+    };
+    \legend {dim = 3072 $\times$ 3072}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\end{document}
